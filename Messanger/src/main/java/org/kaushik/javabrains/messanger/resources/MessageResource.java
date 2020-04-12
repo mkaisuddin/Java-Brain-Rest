@@ -17,6 +17,8 @@ import org.kaushik.javabrains.messanger.model.Message;
 import org.kaushik.javabrains.messanger.services.MessageService;
 
 @Path("messages")
+@Consumes(MediaType.APPLICATION_JSON)
+@Produces(MediaType.APPLICATION_JSON)
 public class MessageResource {
 
 	MessageService messageService = new MessageService();
@@ -44,7 +46,6 @@ public class MessageResource {
 	//messages?year=2015
 	//messages:start=2&size=1
 	@GET
-	@Produces(MediaType.APPLICATION_JSON)
 	public List<Message> getMessage(@QueryParam("year") int year,
 									@QueryParam("start") int start,
 									@QueryParam("size") int size){
@@ -59,7 +60,6 @@ public class MessageResource {
 		
 	@GET
 	@Path("/{messageId}")
-	@Produces(MediaType.APPLICATION_JSON)
 	public Message getMessage(@PathParam("messageId") long id){
 		return messageService.getMessage(id);
 	}
@@ -73,8 +73,7 @@ public class MessageResource {
 	
 	@PUT
 	@Path("/{messageId}")
-	@Consumes(MediaType.APPLICATION_JSON)
-	@Produces(MediaType.APPLICATION_JSON)
+	
 	public Message updateMessage(@PathParam("messageId") long id, Message message){
 		message.setId(id);
 		return messageService.updateMessage(message);
@@ -82,16 +81,16 @@ public class MessageResource {
 	
 	@DELETE
 	@Path("/{messageId}")
-	@Consumes(MediaType.APPLICATION_JSON)
-	@Produces(MediaType.APPLICATION_JSON)
 	public Message deleteMessage(@PathParam("messageId") long id){
 		return messageService.removeMessage(id);
 	}
 	
-	/*{
-		"authore": "author11",
-		"created": "2020-04-11T12:38:07.556Z[UTC]",
-		"id": 1,
-		"message": "Message11"
-	}*/
+	//*************
+	//Implementing Subresources
+	//messages/{messageId}/comments/
+	//*************
+	@Path("/{messageId}/comments")
+	public CommentsResource getCommentsResource(){
+		return new CommentsResource();
+	}
 }
