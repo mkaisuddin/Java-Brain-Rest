@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.kaushik.javabrains.messanger.database.DatabaseClass;
+import org.kaushik.javabrains.messanger.exception.DataNotFoundException;
 import org.kaushik.javabrains.messanger.model.Message;
 
 public class MessageService {
@@ -42,6 +43,10 @@ public class MessageService {
 	}
 	
 	public Message getMessage(Long id){
+		Message message =  messages.get(id);
+		if (message == null) {
+			throw new DataNotFoundException("Mesage with id " + id + " not found");
+		}
 		return messages.get(id);
 	}
 	

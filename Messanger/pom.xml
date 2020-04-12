@@ -10,7 +10,7 @@
     <name>Messanger</name>
 
     <build>
-        <finalName>Messanger12</finalName>
+        <finalName>Messanger</finalName>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>

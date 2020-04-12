@@ -85,11 +85,12 @@ public class MessageResource {
 		return messageService.removeMessage(id);
 	}
 	
-	//*************
-	//Implementing Subresources
-	//messages/{messageId}/comments/
-	//*************
+	
 	@Path("/{messageId}/comments")
+	/*************
+	Implementing Subresources
+	messages/{messageId}/comments/
+	*************/
 	public CommentsResource getCommentsResource(){
 		return new CommentsResource();
 	}
