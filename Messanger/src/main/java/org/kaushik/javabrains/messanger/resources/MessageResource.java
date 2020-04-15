@@ -11,7 +11,9 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.UriInfo;
 
 import org.kaushik.javabrains.messanger.model.Message;
 import org.kaushik.javabrains.messanger.services.MessageService;
@@ -60,10 +62,17 @@ public class MessageResource {
 		
 	@GET
 	@Path("/{messageId}")
-	public Message getMessage(@PathParam("messageId") long id){
-		return messageService.getMessage(id);
+	public Message getMessage(@PathParam("messageId") long id, @Context UriInfo uriInfo){
+		//return messageService.getMessage(id);
+		Message message = messageService.getMessage(id);
+		//HATEOAS
+		message.addLink(getUriInfoForSelf(uriInfo, message), "self");
+		message.addLink(getUriInfoForProfile(uriInfo, message), "profile");
+		message.addLink(getUriInfoForComments(uriInfo, message), "comments");		
+		return message;
 	}
 	
+
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
@@ -94,4 +103,43 @@ public class MessageResource {
 	public CommentsResource getCommentsResource(){
 		return new CommentsResource();
 	}
+	
+	//HATEOAS
+	public String getUriInfoForSelf(UriInfo uriInfo, Message message){
+		return uriInfo.getBaseUriBuilder()      	//http://localhost:8080/messanger/webapi/
+				.path(MessageResource.class)			//										/messages
+				.path(Long.toString(message.getId()))	//												/{messageId}
+				.build()
+				.toString();
+	}
+	
+	//HATEOAS
+	private String getUriInfoForProfile(UriInfo uriInfo, Message message) {
+		return uriInfo.getBaseUriBuilder()      	//http://localhost:8080/messanger/webapi/
+				.path(ProfileResource.class)			//										/profiles
+				.path(message.getAuthore())	//														/{authoreName}
+				.build()
+				.toString();
+	}
+	
+	//HATEOAS
+	private String getUriInfoForComments(UriInfo uriInfo, Message message) {
+		return uriInfo.getBaseUriBuilder()      				 	//http://localhost:8080/messanger/webapi/
+				.path(MessageResource.class)						//								/messages
+				.path(MessageResource.class, "getCommentsResource") //									/{messageId}/comments
+				.resolveTemplate("messageId", message.getId()) 		//									replace dynamic value{messageId}
+				.path(CommentsResource.class)						//								/
+				.build()
+				.toString();
+	}
 }
+
+/**
+uriInfo
+		.getAbsolutePathBuilder() or getBaseUriBuilder()
+			
+			UriBuilder
+				.path("blah")         		/blah/
+				.path("Anyresource.class")	/messages/
+*/
+	
