@@ -14,7 +14,7 @@ import javax.ws.rs.ext.MessageBodyWriter;
 import javax.ws.rs.ext.Provider;
 
 @Provider
-//@Produces(MediaType.TEXT_PLAIN)
+@Produces(MediaType.TEXT_PLAIN)
 public class DateMessageBodyWriter implements MessageBodyWriter<Date>{
 
 	@Override

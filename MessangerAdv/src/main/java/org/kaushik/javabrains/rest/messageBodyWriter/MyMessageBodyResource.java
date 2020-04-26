@@ -9,6 +9,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
 @Path("test")
+//if Accept=TEXT_PLAIN at client
 public class MyMessageBodyResource {
 	
 	@GET
