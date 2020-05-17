@@ -22,7 +22,7 @@ public class InvocationsDemo {
 		return client.target("http://localhost:8080/MessangerAdv22/webapi/")
 				.path("messages")
 				.request(MediaType.APPLICATION_JSON)
-				// instent of get use buildGet for Invocations
+				// instent of .get() use buildGet for Invocations
 				.buildGet();
 				
 	}
